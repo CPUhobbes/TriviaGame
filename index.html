@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 
-		<title>Star Trek RPG</title>
+		<title>Friends Trivia Game!</title>
 
 		<meta charset="UTF-8"> 
 
@@ -18,44 +18,60 @@
 
 
 	<body>
-		<container>
-			<row>
-				<div class="col-md-12 text-center">Friends Trivia</div>
-			</row>
-
-			<row>
-				<div class="col-md-1 text-center"></div>
-				<div class="col-md-2 text-center">Score</div>
-				<div class="col-md-6 text-center">
-					<div>Question</div>
-					<div id="question"></div>
-
-
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 text-center headerBG">
+					<img src="assets/images/friendsLogoWhite.png" alt="Friends Logo" width="500"/>
 				</div>
-				<div class="col-md-2 text-center">
-					<div>Timer</div>
-					<div id="timer"></div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 mainArea">
+					<div class="row">
+						<div class="col-md-2 text-center">
+							<div class="scoreTimerText">Score</div>
+							<div id="currentScore"></div>
+							<div id="scorePercent"></div>
+						</div>
+
+						<div class="col-md-8 text-left centerBorder">
+							
+							<div class="row">
+								<div class="col-md-12" id="questionNumText"></div>
+								<div class="col-md-12 questionText bottomOutline" id="question"></div>
+							</div>
+
+							<div class="row">
+								<div class="col-md-12 text-center buttonCenter">
+									<div class="row ">
+										<div class="col-md-6 text-left ">
+											<button class="buttonNormal answerButton" id="answer0"></button>
+										</div>
+										<div class="col-md-6 text-right">
+											<button class="buttonNormal answerButton" id="answer1"></button>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6 text-left">
+											<button class="buttonNormal answerButton" id="answer2"></button>
+										</div>
+										<div class="col-md-6 text-right">
+											<button class="buttonNormal answerButton" id="answer3"></button>
+										</div>
+									</div>						
+								</div>
+							</div>
+						</div>
+						<div class="col-md-2 text-center">
+							<div class="scoreTimerText">Timer</div>
+							<div id="timer"></div>
+							<div id="timerText"></div>
+						</div>
+					</div>
 				</div>
-				<div class="col-md-1 text-center"></div>
-			</row>
-			<row>
-
-				<div class="col-md-3 text-center"></div>
-				<div class="col-md-6 text-center">
-					<div>Answers</div>
-					<div class="answers" id="answer0"></div>
-					<div class="answers" id="answer1"></div>
-					<div class="answers" id="answer2"></div>
-					<div class="answers" id="answer3"></div>
-				</div>
-				<div class="col-md-3 text-center"></div>
-
-			</row>
-
-
-
-
-		</container>
+				
+			</div>
+			
+		</div>
 
 		<div id="myModal" class="modal fade" role="dialog" data-backdrop="static">
 			<div class="modal-dialog">

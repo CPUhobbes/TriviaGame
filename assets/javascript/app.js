@@ -1,12 +1,16 @@
 /*
  *GLOBAL VARIABLES
  */
+ //Timer 
 var timer;
-var questionTimer = 20;
+var startingTimerNumber =10;
+var pauseTimer;
 var questionOrder;
 var currentQuestion;
 var currentQuestNum;
 var answerListLength = 4;
+var correctAnswers;
+var canClick;
 
  var TRIVIA_LIST = {
 					0: {
@@ -50,6 +54,26 @@ var answerListLength = 4;
 							}
 						},
 					4: {
+							Q: "What is the name Joey's bedtime penquin pal?",
+							A: "Huggsy",
+							A_LIST:{
+								0: "Maurice",
+								1: "Alicia May Emory",
+								2: "Krog",
+								3: "Huggsy"
+							}
+						},
+					5: {
+							Q: "How many times was Ross married?",
+							A: "3",
+							A_LIST:{
+								0: "1",
+								1: "2",
+								2: "4",
+								3: "3"
+							}
+						},
+					6: {
 							Q: "How many categories for towels does Monica have?",
 							A: "11",
 							A_LIST:{
@@ -65,32 +89,35 @@ var answerListLength = 4;
 
 $(document).ready(function(){
 	
-	$(".answers").click(function(){
-			checkAnswer($(this).html());
-		});
 	
 	//$("#myModal").modal('show');
 	startGame();
-
 	
-
-
+	$(".answerButton").click(function(){
+			if(canClick==true){
+				checkAnswer($(this).html(), $(this).attr('value'));
+			}
+		});
 });
 
 function startGame(){
+
 	var listLength = Object.keys(TRIVIA_LIST).length;
 	currentQuestion =0;
+	correctAnswers = 0;
+	canClick=true;
 	questionOrder = getShuffledArray(listLength);
-	startTimer();
-
-
+	changeQuestion();
 }
 
 
 
 function startTimer(){
-	changeQuestion();
+
+	questionTimerNumber=startingTimerNumber;
+	$("#timer").html(questionTimerNumber);
 	timer = setInterval(updateTimer, 1000);
+	clearTimeout(pauseTimer);
 
 }
 
@@ -98,16 +125,26 @@ function startTimer(){
 
 function updateTimer(){
 
-	
-	$("#timer").html(questionTimer);
-	questionTimer-=1;
-	if(questionTimer ==-1){
-
-		clearInterval(timer);
+	questionTimerNumber-=1;
+	$("#timer").html(questionTimerNumber);
+	if(questionTimerNumber ==5){
+		$("#timer").css({"color":"#E91E23"});
 
 	}
 
+	if(questionTimerNumber ==0){
+		$("#timerText").html("Time's Up!");
+		clearInterval(timer);
+		checkAnswer(-1);
+	}
+
 }
+
+function questionPause(){
+	var pauseTimer = setTimeout(changeQuestion, 1000);
+}
+
+
 function getShuffledArray(arrayLength){
 	
 	var tempArray = new Array();
@@ -123,33 +160,89 @@ function getShuffledArray(arrayLength){
 		tempArray[i] = tempArray[randNum];
 		tempArray[randNum] = tempNum;
 	}
-	for(var i = 0; i<tempArray.length;++i){
-		console.log(tempArray[i]);
-	}
+	// for(var i = 0; i<tempArray.length;++i){
+	// 	console.log(tempArray[i]);
+	// }
 
 	return tempArray;
 
 }
 
 function changeQuestion(){
-	//Relates random number question array to trivia list
-	currentQuestNum = questionOrder[currentQuestion];
 
-	//Display random question
-	$("#question").html(TRIVIA_LIST[currentQuestNum]["Q"]);
+	//Removes "Time's Up" if displayed
+	$("#timerText").html("");
+	//Start question Timer
 
-	//Randomize answer order and display
-	var answerArray = getShuffledArray(answerListLength);
-	for(var i = 0; i <answerArray.length;++i){
-		$("#answer"+i).html(TRIVIA_LIST[currentQuestNum]["A_LIST"][answerArray[i]]);
+	startTimer();
+	//Validates to make sure not to exceed number of questions
+	if((currentQuestion+1)<=questionOrder.length){
+		canClick=true;
+
+		//Relates random number question array to trivia list
+		currentQuestNum = questionOrder[currentQuestion];
+
+		//Display random question
+		$("#question").html(TRIVIA_LIST[currentQuestNum]["Q"]);
+
+		//Display number  of questions fraction
+		$("#questionNumText").html("Question: "+(currentQuestion+1)+"/"+questionOrder.length);
+
+		//Randomize answer order and display
+		var answerArray = getShuffledArray(answerListLength);
+		for(var i = 0; i <answerArray.length;++i){
+			$("#answer"+i).html(TRIVIA_LIST[currentQuestNum]["A_LIST"][answerArray[i]]);
+			$("#answer"+i).attr("class", "buttonNormal answerButton");
+			$("#answer"+i).attr("value", i);
+
+		//Reset Timer Color
+		$("#timer").css({"color":"#ffffff"});
+		}
+	}
+	else{
+		clearTimeout(pauseTimer);
+		clearInterval(timer);
+		alert("Game Over");
+		startGame();
 
 	}
 
 }
-function checkAnswer(answer){
-	if(answer == TRIVIA_LIST[currentQuestNum]["A"])
-		alert("correct");
-	else
-		alert("wrong");
+function checkAnswer(answer, valueNum){
 
+	clearInterval(timer);
+	canClick=false;
+
+	if(answer == TRIVIA_LIST[currentQuestNum]["A"]){
+		correctAnswers+=1;
+		correctButtonColor(true, valueNum);
+	}
+	else{
+		correctButtonColor(false, valueNum);
+	}
+
+	//Display score
+	currentQuestion+=1;
+	var scorePercent = Math.round(correctAnswers/currentQuestion*100);
+	$("#currentScore").html(correctAnswers+"/"+currentQuestion);
+	$("#scorePercent").html(scorePercent+"%");
+
+	questionPause();
+
+}
+
+function correctButtonColor(correct, answer){
+	var correctNum;
+	for(var i =0;i<answerListLength;++i){
+		if(TRIVIA_LIST[currentQuestNum]["A"] == $("#answer"+i).html()){
+			correctNum = i;
+		}
+		$("#answer"+i).removeClass("buttonNormal")
+		$("#answer"+i).addClass("disabled buttonNormalAfterClick");
+	}
+
+	if(!correct){
+		$("#answer"+answer).attr("class", "buttonWrong disabled answerButton");
+	}
+	$("#answer"+correctNum).attr("class", "buttonCorrect disabled answerButton");
 }
