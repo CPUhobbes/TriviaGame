@@ -1,18 +1,25 @@
 /*
  *GLOBAL VARIABLES
- */
- //Timer 
+ */ 
+
+//Static variables
+var STARTINGTIMERNUMBER =15;  //In seconds
+var PAUSETIME = 3;	//In seconds
+var ANSWERLISTLENGTH = 4; //Number of answers possible, create object.length function if # answers are not consistant for each question
+
+//Timer variables
 var timer;
-var startingTimerNumber =10;
 var pauseTimer;
+
+//Trivia Logic controllers
 var questionOrder;
 var currentQuestion;
 var currentQuestNum;
-var answerListLength = 4;
 var correctAnswers;
 var canClick;
 
- var TRIVIA_LIST = {
+//Trivia List
+var TRIVIA_LIST = {
 					0: {
 							Q: "What is Phoebe's twin sister's name?",
 							A: "Ursula",
@@ -54,7 +61,7 @@ var canClick;
 							}
 						},
 					4: {
-							Q: "What is the name Joey's bedtime penquin pal?",
+							Q: "What is the name of Joey's bedtime penquin pal?",
 							A: "Huggsy",
 							A_LIST:{
 								0: "Maurice",
@@ -74,6 +81,36 @@ var canClick;
 							}
 						},
 					6: {
+							Q: "What name is Chandler's TV Guide addressed to?",
+							A: "Miss Chanandler Bong",
+							A_LIST:{
+								0: "Joey Tribiani",
+								1: "Chanjoey Bingiani",
+								2: "Chandler Bing",
+								3: "Miss Chanandler Bong"
+							}
+						},
+					7: {
+							Q: "What is the name of Phoebe's most-played song?",
+							A: "Smelly Cat",
+							A_LIST:{
+								0: "Sticky Shoes",
+								1: "Mother's Ashes",
+								2: "Two of Them Kissed (Last Night)",
+								3: "Smelly Cat"
+							}
+						},
+					8: {
+							Q: "What made \"Fun Bobby\" fun?",
+							A: "He drank a lot",
+							A_LIST:{
+								0: "He smoked weed a lot",
+								1: "He was rich",
+								2: "He was a comedian",
+								3: "He drank a lot"
+							}
+						},
+					9: {
 							Q: "How many categories for towels does Monica have?",
 							A: "11",
 							A_LIST:{
@@ -86,12 +123,14 @@ var canClick;
 					};
 
 
-
+/*
+ * Start Game
+ */
 $(document).ready(function(){
 	
 	
-	//$("#myModal").modal('show');
-	startGame();
+	$("#myModal").modal('show');
+	//startGame();
 	
 	$(".answerButton").click(function(){
 			if(canClick==true){
@@ -108,20 +147,23 @@ function startGame(){
 	canClick=true;
 	questionOrder = getShuffledArray(listLength);
 	changeQuestion();
+	$("#currentScore").html("");
+	$("#scorePercent").html("");
+
 }
 
 
-
+/*
+ * Timer Functions
+ */
 function startTimer(){
 
-	questionTimerNumber=startingTimerNumber;
+	questionTimerNumber=STARTINGTIMERNUMBER;
 	$("#timer").html(questionTimerNumber);
 	timer = setInterval(updateTimer, 1000);
 	clearTimeout(pauseTimer);
 
 }
-
-
 
 function updateTimer(){
 
@@ -141,10 +183,13 @@ function updateTimer(){
 }
 
 function questionPause(){
-	var pauseTimer = setTimeout(changeQuestion, 1000);
+	pauseTimer = setTimeout(changeQuestion, 1000*PAUSETIME);
 }
 
 
+/*
+ * Game Logic
+ */
 function getShuffledArray(arrayLength){
 	
 	var tempArray = new Array();
@@ -160,9 +205,6 @@ function getShuffledArray(arrayLength){
 		tempArray[i] = tempArray[randNum];
 		tempArray[randNum] = tempNum;
 	}
-	// for(var i = 0; i<tempArray.length;++i){
-	// 	console.log(tempArray[i]);
-	// }
 
 	return tempArray;
 
@@ -172,11 +214,12 @@ function changeQuestion(){
 
 	//Removes "Time's Up" if displayed
 	$("#timerText").html("");
-	//Start question Timer
 
+	//Start question Timer
 	startTimer();
+
 	//Validates to make sure not to exceed number of questions
-	if((currentQuestion+1)<=questionOrder.length){
+	if((currentQuestion) < questionOrder.length){
 		canClick=true;
 
 		//Relates random number question array to trivia list
@@ -189,7 +232,7 @@ function changeQuestion(){
 		$("#questionNumText").html("Question: "+(currentQuestion+1)+"/"+questionOrder.length);
 
 		//Randomize answer order and display
-		var answerArray = getShuffledArray(answerListLength);
+		var answerArray = getShuffledArray(ANSWERLISTLENGTH);
 		for(var i = 0; i <answerArray.length;++i){
 			$("#answer"+i).html(TRIVIA_LIST[currentQuestNum]["A_LIST"][answerArray[i]]);
 			$("#answer"+i).attr("class", "buttonNormal answerButton");
@@ -202,17 +245,22 @@ function changeQuestion(){
 	else{
 		clearTimeout(pauseTimer);
 		clearInterval(timer);
-		alert("Game Over");
-		startGame();
+		$("#myModal").modal('show');
+		$("#modalText").html("Game Over<br />"+"Your Score: "+correctAnswers+"/"+currentQuestion);
+		$("#modalButtonText").html("Click to play again!");
+		//alert("Game Over \n\n"+"Your Score: "+correctAnswers+"/"+currentQuestion);
+		//startGame();
 
 	}
 
 }
+
 function checkAnswer(answer, valueNum){
 
 	clearInterval(timer);
 	canClick=false;
 
+	//Check to see if answer matches correct answer
 	if(answer == TRIVIA_LIST[currentQuestNum]["A"]){
 		correctAnswers+=1;
 		correctButtonColor(true, valueNum);
@@ -233,14 +281,19 @@ function checkAnswer(answer, valueNum){
 
 function correctButtonColor(correct, answer){
 	var correctNum;
-	for(var i =0;i<answerListLength;++i){
+
+	//Find which random button contains the correct answer
+	for(var i =0;i<ANSWERLISTLENGTH;++i){
 		if(TRIVIA_LIST[currentQuestNum]["A"] == $("#answer"+i).html()){
 			correctNum = i;
 		}
+
+		//disable all button clicks
 		$("#answer"+i).removeClass("buttonNormal")
 		$("#answer"+i).addClass("disabled buttonNormalAfterClick");
 	}
 
+	//Highlight correct and incorrect buttons
 	if(!correct){
 		$("#answer"+answer).attr("class", "buttonWrong disabled answerButton");
 	}

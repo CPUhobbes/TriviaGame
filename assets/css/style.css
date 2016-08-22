@@ -12,9 +12,16 @@ body{
 	margin-bottom: 30px;
 	padding: 10px;
 }
+
+.modalTextColor{
+	color:#000000;
+
+
+}
 .questionText{
 	font-size: 30px;
-	padding-top: 15px; 
+	padding-top: 15px;
+	height: 125px;
 }
 
 #questionNumText{
@@ -81,6 +88,7 @@ body{
  }
 .buttonNormal:active {
  	background-color:#286090;
+ 	border: none;
  }
 
  .buttonCorrect{
@@ -99,4 +107,7 @@ body{
 	cursor: not-allowed;
 
 }
+button:focus {
+ 	outline:0;
+ }
 
