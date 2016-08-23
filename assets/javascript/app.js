@@ -177,7 +177,7 @@ function updateTimer(){
 	if(questionTimerNumber ==0){
 		$("#timerText").html("Time's Up!");
 		clearInterval(timer);
-		checkAnswer(-1);
+		checkAnswer("",-1);
 	}
 
 }
