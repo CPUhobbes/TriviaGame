@@ -183,6 +183,8 @@ function updateTimer(){
 }
 
 function questionPause(){
+	//////////////////////////////////////moveButtons();
+
 	pauseTimer = setTimeout(changeQuestion, 1000*PAUSETIME);
 }
 
@@ -211,6 +213,8 @@ function getShuffledArray(arrayLength){
 }
 
 function changeQuestion(){
+
+	/////////////////////////////////////////resetButtons();
 
 	//Removes "Time's Up" if displayed
 	$("#timerText").html("");
@@ -299,3 +303,15 @@ function correctButtonColor(correct, answer){
 	}
 	$("#answer"+correctNum).attr("class", "buttonCorrect disabled answerButton");
 }
+
+
+// function moveButtons(){
+
+// $(".row").css({"overflow":"hidden"});
+// $("#answer0").css({"position":"absolute"});
+// $("#answer0").animate({right: '250px'}, "slow");
+
+// }
+// function resetButtons(){
+// 	$('#answer0').removeAttr('style'); 
+// }
