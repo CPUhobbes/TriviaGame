@@ -10,6 +10,7 @@ var ANSWERLISTLENGTH = 4; //Number of answers possible, create object.length fun
 //Timer variables
 var timer;
 var pauseTimer;
+var buttonTimer;
 
 //Trivia Logic controllers
 var questionOrder;
@@ -149,9 +150,7 @@ function startGame(){
 	changeQuestion();
 	$("#currentScore").html("");
 	$("#scorePercent").html("");
-
 }
-
 
 /*
  * Timer Functions
@@ -183,11 +182,17 @@ function updateTimer(){
 }
 
 function questionPause(){
-	//////////////////////////////////////moveButtons();
 
-	pauseTimer = setTimeout(changeQuestion, 1000*PAUSETIME);
+	//pauseTimer = setTimeout(changeQuestion, 1000*PAUSETIME);  //No button animation
+	pauseTimer = setTimeout(buttonPause, 1000*PAUSETIME);
+	
 }
 
+//For button animation
+function buttonPause(){
+	moveButtons();
+	buttonTimer = setTimeout(changeQuestion, 1000);
+}
 
 /*
  * Game Logic
@@ -214,8 +219,6 @@ function getShuffledArray(arrayLength){
 
 function changeQuestion(){
 
-	/////////////////////////////////////////resetButtons();
-
 	//Removes "Time's Up" if displayed
 	$("#timerText").html("");
 
@@ -224,7 +227,11 @@ function changeQuestion(){
 
 	//Validates to make sure not to exceed number of questions
 	if((currentQuestion) < questionOrder.length){
+
 		canClick=true;
+
+		//Reset buttons to original position
+		resetButtons();
 
 		//Relates random number question array to trivia list
 		currentQuestNum = questionOrder[currentQuestion];
@@ -304,14 +311,19 @@ function correctButtonColor(correct, answer){
 	$("#answer"+correctNum).attr("class", "buttonCorrect disabled answerButton");
 }
 
+/*
+ * Button Animations
+ */
 
-// function moveButtons(){
+function moveButtons(){
+		if($( window ).width()>991){
+			$(".answerButton").css({"position":"relative"});
+			$(".answerButton").animate({left: '750px'}, 750);
+		}
+}
 
-// $(".row").css({"overflow":"hidden"});
-// $("#answer0").css({"position":"absolute"});
-// $("#answer0").animate({right: '250px'}, "slow");
-
-// }
-// function resetButtons(){
-// 	$('#answer0').removeAttr('style'); 
-// }
+function resetButtons(){
+	if($( window ).width()>991){
+		$(".answerButton").removeAttr('style');
+	}
+}

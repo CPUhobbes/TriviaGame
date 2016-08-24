@@ -79,8 +79,6 @@ body{
 	background-color: #31B0D5;
 	border: none;
 	border-radius: 4px;
-
-
 }
 
 .buttonNormal:hover{
@@ -103,6 +101,14 @@ body{
 	border: none;
 	border-radius: 4px;
 }
+.answerRow{
+	overflow:hidden;
+}
+.buttonHidden{
+	display: none;
+}
+
+
 .disabled{
 	cursor: not-allowed;
 
