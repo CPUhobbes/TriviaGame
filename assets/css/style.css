@@ -127,6 +127,7 @@ button:focus {
 		font-size: 48px;
 	}
 	#timerText{
+		font-size: 32px;
 		height: auto;
 	}
 }

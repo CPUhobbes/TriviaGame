@@ -3,7 +3,7 @@
  */ 
 
 //Static variables
-var STARTINGTIMERNUMBER =15;  //In seconds
+var STARTINGTIMERNUMBER =20;  //In seconds
 var PAUSETIME = 3;	//In seconds
 var ANSWERLISTLENGTH = 4; //Number of answers possible, create object.length function if # answers are not consistant for each question
 var WINFILE = "win.mp4";
