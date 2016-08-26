@@ -6,7 +6,8 @@
 var STARTINGTIMERNUMBER =15;  //In seconds
 var PAUSETIME = 3;	//In seconds
 var ANSWERLISTLENGTH = 4; //Number of answers possible, create object.length function if # answers are not consistant for each question
-
+var WINFILE = "win.mp4";
+var LOSEFILE = "lose.mp4";
 //Timer variables
 var timer;
 var pauseTimer;
@@ -42,7 +43,7 @@ var TRIVIA_LIST = {
 							}
 						},
 					2: {
-							Q: "What was the name of the man who lived above Monica and Rachel?",
+							Q: "What was the name of the man who lived below Monica and Rachel?",
 							A: "Mr. Heckles",
 							A_LIST:{
 								0: "Mr. Stevens",
@@ -120,9 +121,109 @@ var TRIVIA_LIST = {
 								2: "13",
 								3: "11"
 							}
+						},
+					10: {
+							Q: "What is Monica's biggest pet peeve?",
+							A: "Animals dressed as humans",
+							A_LIST:{
+								0: "Things being dirty",
+								1: "Things being disorganized",
+								2: "Food displayed as art",
+								3: "Animals dressed as humans"
+							}
+						},
+					11: {
+							Q: "According to Chandler, what scares the \"Bejeezus\" out of him?",
+							A: "Michael Flatley, Lord of the Dance",
+							A_LIST:{
+								0: "Being stuck in a box",
+								1: "Airplanes",
+								2: "Bozo the Clown",
+								3: "Michael Flatley, Lord of the Dance"
+							}
+						},
+					12: {
+							Q: "What book does Joey put in the Freezer when he gets scared?",
+							A: "The Shining",
+							A_LIST:{
+								0: "Cujo",
+								1: "Dracula",
+								2: "Pet Sematary",
+								3: "The Shining"
+							}
+						},
+					13: {
+							Q: "Which country does Chandler tell Janice he’s moving to?",
+							A: "Yemen",
+							A_LIST:{
+								0: "Iran",
+								1: "Turkey",
+								2: "Romania",
+								3: "Yemen"
+							}
+						},
+					14: {
+							Q: "What is the name of Phoebe's alter-ego?",
+							A: "Regina Phalange",
+							A_LIST:{
+								0: "Princess Consuela Banana Hammock",
+								1: "Rachel Green",
+								2: "Nestlé Tollhouse",
+								3: "Regina Phalange"
+							}
+						},
+					15: {
+							Q: "Who is not a member of the \"I Hate Rachel Green Club\"?",
+							A: "Monica Geller",
+							A_LIST:{
+								0: "Ross Geller",
+								1: "Will Colbert",
+								2: "Ta-Taka-Ki-Kek",
+								3: "Monica Geller"
+							}
+						},
+					16: {
+							Q: "What does Ross say that Rachel’s “traditional English trifle” tastes like?",
+							A: "Feet",
+							A_LIST:{
+								0: "Raspberry jam",
+								1: "Meat and peas",
+								2: "Garabge",
+								3: "Feet"
+							}
+						},
+					17: {
+							Q: "What is Chandler Bing's job?",
+							A: "IT procurement manager",
+							A_LIST:{
+								0: "Transponster",
+								1: "Statistical manager in charge of the WENUS",
+								2: "Comic book writer",
+								3: "IT procurement manager"
+							}
+						},
+					18: {
+							Q: "In what city does Monica and Chandler first have \"relations\"?",
+							A: "London",
+							A_LIST:{
+								0: "New York",
+								1: "Las Vegas",
+								2: "Montauk",
+								3: "London"
+							}
+						},
+					19: {
+							Q: "Which of the following actors has not played Phoebe's boyfriend?",
+							A: "Bruce Willis",
+							A_LIST:{
+								0: "Paul Rudd",
+								1: "Hank Azaria",
+								2: "Charlie Sheen",
+								3: "Bruce Willis"
+							}
 						}
-					};
 
+				};
 
 /*
  * Start Game
@@ -174,9 +275,9 @@ function updateTimer(){
 	}
 
 	if(questionTimerNumber ==0){
-		$("#timerText").html("Time's Up!");
 		clearInterval(timer);
 		checkAnswer("",-1);
+		$("#timerText").html("Time's Up!");
 	}
 
 }
@@ -256,12 +357,7 @@ function changeQuestion(){
 	else{
 		clearTimeout(pauseTimer);
 		clearInterval(timer);
-		$("#myModal").modal('show');
-		$("#modalText").html("Game Over<br />"+"Your Score: "+correctAnswers+"/"+currentQuestion);
-		$("#modalButtonText").html("Click to play again!");
-		//alert("Game Over \n\n"+"Your Score: "+correctAnswers+"/"+currentQuestion);
-		//startGame();
-
+		endModal();
 	}
 
 }
@@ -274,17 +370,18 @@ function checkAnswer(answer, valueNum){
 	//Check to see if answer matches correct answer
 	if(answer == TRIVIA_LIST[currentQuestNum]["A"]){
 		correctAnswers+=1;
+		$("#timerText").html("Correct!");
 		correctButtonColor(true, valueNum);
 	}
 	else{
 		correctButtonColor(false, valueNum);
+		$("#timerText").html("Incorrect!");
 	}
 
 	//Display score
 	currentQuestion+=1;
-	var scorePercent = Math.round(correctAnswers/currentQuestion*100);
 	$("#currentScore").html(correctAnswers+"/"+currentQuestion);
-	$("#scorePercent").html(scorePercent+"%");
+	$("#scorePercent").html(getPercentScore()+"%");
 
 	questionPause();
 
@@ -310,6 +407,39 @@ function correctButtonColor(correct, answer){
 	}
 	$("#answer"+correctNum).attr("class", "buttonCorrect disabled answerButton");
 }
+
+function endModal(){
+	//Show Modal
+	$("#myModal").modal('show');
+
+	//Append video to modal
+	var vid = $('<video>');
+	vid.attr("class", "videoSize");
+	vid.attr("autoplay","1");
+	vid.attr("loop","1");
+	vid.text("Your browser does not support the video element.");
+
+	//Show video based on score
+	if(getPercentScore() >=70){
+		vid.append("<source src=\"assets/video/"+WINFILE+"\">");
+	}
+	else{
+		vid.append("<source src=\"assets/video/"+LOSEFILE+"\">");
+	}
+	$("#modalVideo").empty();	
+	$("#modalVideo").append(vid);
+	$("#modalText").attr("class", "endGameText text-center");
+	$("#modalText").html("Game Over!<br />"+"Your Score: "+correctAnswers+"/"+currentQuestion+" = "+getPercentScore()+"%");
+	$("#modalButtonText").html("Click to play again!");
+
+
+}
+
+function getPercentScore(){
+	return Math.round(correctAnswers/currentQuestion*100);
+
+}
+
 
 /*
  * Button Animations
