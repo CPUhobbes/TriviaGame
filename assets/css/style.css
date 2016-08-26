@@ -5,17 +5,14 @@ body{
 	background-color: #000000;
 
 }
-
 .headerBG{
 
 	background-color: rgba(0,0,0,.8);
 	margin-bottom: 30px;
 	padding: 10px;
 }
-
 .modalTextColor{
 	color:#000000;
-
 
 }
 .questionText{
@@ -23,12 +20,9 @@ body{
 	padding-top: 15px;
 	height: 125px;
 }
-
 #questionNumText{
 	font-size: 24px;
 	padding-top: 15px; 
-
-
 }
 .mainArea{
 
@@ -52,7 +46,6 @@ body{
 	font-size: 24px;
 	width: 325px;
 }
-
 #timer{
 	font-size: 92px;
 }
@@ -61,7 +54,6 @@ body{
 }
 .scoreTimerText{
 	font-size: 36px;
-
 }
 #currentScore, #scorePercent{
 	font-size: 64px;
@@ -73,14 +65,12 @@ body{
     float:none;
     height: 250px;
 }
-
 .buttonNormal, .buttonNormalAfterClick{
 	color:#333333;
 	background-color: #31B0D5;
 	border: none;
 	border-radius: 4px;
 }
-
 .buttonNormal:hover{
  	color:#ffffff;
  }
@@ -88,8 +78,7 @@ body{
  	background-color:#286090;
  	border: none;
  }
-
- .buttonCorrect{
+.buttonCorrect{
 	color:#ffffff;
 	background-color: #449D44;
 	border: none;
@@ -107,8 +96,6 @@ body{
 .buttonHidden{
 	display: none;
 }
-
-
 .disabled{
 	cursor: not-allowed;
 
@@ -125,9 +112,10 @@ button:focus {
 .endGameText{
 	font-size: 20px;
 	color: #000000;
-
 }
-
+#timerText{
+		height: auto;
+	}
 
 
 @media(max-width: 1199px){
@@ -135,8 +123,13 @@ button:focus {
 		font-size: 16px;
 		width: 260px;
 	}
+	#currentScore, #scorePercent{
+		font-size: 48px;
+	}
+	#timerText{
+		height: auto;
+	}
 }
-
 
 @media(max-width: 991px){
 
@@ -161,5 +154,8 @@ button:focus {
 	#currentScore, #scorePercent{
 		height:50px;
 		font-size: 40px;
+	}
+	#timerText{
+		height: 50px;
 	}
 }

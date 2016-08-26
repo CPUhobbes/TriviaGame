@@ -320,7 +320,7 @@ function getShuffledArray(arrayLength){
 
 function changeQuestion(){
 
-	//Removes "Time's Up" if displayed
+	//Removes "Time's Up/Correct/Incorrect" when displayed
 	$("#timerText").html("");
 
 	//Start question Timer
@@ -415,8 +415,8 @@ function endModal(){
 	//Append video to modal
 	var vid = $('<video>');
 	vid.attr("class", "videoSize");
-	vid.attr("autoplay","1");
-	vid.attr("loop","1");
+	vid.attr("autoplay","autoplay");
+	vid.attr("loop","loop");
 	vid.text("Your browser does not support the video element.");
 
 	//Show video based on score
