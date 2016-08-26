@@ -8,6 +8,7 @@ var PAUSETIME = 3;	//In seconds
 var ANSWERLISTLENGTH = 4; //Number of answers possible, create object.length function if # answers are not consistant for each question
 var WINFILE = "win.mp4";
 var LOSEFILE = "lose.mp4";
+
 //Timer variables
 var timer;
 var pauseTimer;
